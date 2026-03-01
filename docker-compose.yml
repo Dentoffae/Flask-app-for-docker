@@ -1,0 +1,23 @@
+services:
+  backend:
+    build: .
+    container_name: flask-backend
+    # Порт не публикуем — доступ только из сети композа через frontend
+    networks:
+      - app-net
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    container_name: flask-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - app-net
+    restart: unless-stopped
+
+networks:
+  app-net:
+    driver: bridge
